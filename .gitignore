@@ -1,0 +1,9 @@
+# PlatformIO build tree (absolute paths, large)
+.pio/
+.vscode/
+
+# Python bytecode from tools/
+__pycache__/
+
+# Your own recordings; generated audio sources are committed
+audio/*.recorded.wav

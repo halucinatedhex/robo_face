@@ -1,0 +1,11 @@
+# robo_face, 4MB flash.
+#
+# Trades the second OTA slot for audio storage: a single ~1.6MB app leaves
+# ~2.3MB of filesystem, about 70 s of 16 kHz 16-bit mono speech. The prop is
+# flashed over USB anyway.
+#
+# Name,     Type, SubType, Offset,   Size,      Flags
+nvs,        data, nvs,     0x9000,   0x5000,
+otadata,    data, ota,     0xe000,   0x2000,
+app0,       app,  ota_0,   0x10000,  0x1A0000,
+spiffs,     data, spiffs,  0x1B0000, 0x250000,
