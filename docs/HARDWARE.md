@@ -52,22 +52,26 @@ only needs the data line. Assign it somewhere harmless and ignore it.
 
 ## Matrix chain
 
-Only the **data** line chains. CLK and CS are a shared bus — every module
-sees the same clock and the same latch pulse, which is what makes the chain
-behave as one long shift register.
+These modules carry **every signal on both headers**, so each one is wired
+only to its neighbours — one 5-way cable per hop, no star wiring and no
+separate bus to run.
 
 ```
- ESP32-C3            Mod 0        Mod 1        Mod 2        Mod 3
-                  (left eye)  (right eye)   (mouth L)    (mouth R)
- GPIO3  DIN ─────────► IN
-                     DOUT ────────► IN
-                                  DOUT ────────► IN
-                                               DOUT ────────► IN
- GPIO2  CLK ─────────►──────────────●────────────●────────────●
- GPIO7  CS  ─────────►──────────────●────────────●────────────●
- 5V         ─────────►──────────────●────────────●────────────●
- GND        ─────────►──────────────●────────────●────────────●
+ ESP32-C3          Mod 0          Mod 1          Mod 2          Mod 3
+                (left eye)     (right eye)     (mouth L)      (mouth R)
+
+   GPIO3 ──DIN──►┐IN      OUT┌─►┐IN      OUT┌─►┐IN      OUT┌─►┐IN
+   GPIO7 ──CS───►│          │  │          │  │          │  │
+   GPIO2 ──CLK──►│          │  │          │  │          │  │
+   5V    ───────►│          │  │          │  │          │  │
+   GND   ───────►└──────────┘  └──────────┘  └──────────┘  └──────────┘
+                  all five pass straight through, hop to hop
 ```
+
+Electrically CLK, CS and power end up common to the whole chain — that is
+what makes it behave as one long shift register — but you never wire them
+as a bus. They arrive through the previous module. Only the data line is
+consumed and regenerated: a module's `DOUT` carries what it did not keep.
 
 Device 0 is the module whose `DIN` comes from the ESP32. The firmware assigns
 0–1 to the eyes and 2+ to the mouth, so the chain must run **left eye → right

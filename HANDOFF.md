@@ -37,9 +37,8 @@ matrices as a face: two eyes and a two-module mouth. The eyes animate
 autonomously forever. The mouth lip-syncs to xLights sequences played by FPP
 over E1.31/sACN, and falls back to its own idle animation between songs.
 
-Ported from `CurtiBotEyes` (`../CurtiBotEyes/.../CurtiBotEyes.ino.ino`), an
-AVR sketch. The original is kept for reference — the mouth artwork in
-`MOUTH_FRAMES_16` is extracted from it verbatim.
+Grown out of an earlier AVR sketch, kept locally for reference — the mouth
+artwork in `MOUTH_FRAMES_16` is extracted from it verbatim.
 
 ## Two ways it runs
 

@@ -1,7 +1,7 @@
 /*
   robo_face -- ESP32 robot face.
 
-  Ported from the AVR CurtiBotEyes sketch.
+  Grown out of an earlier AVR sketch.
 
   Five chained MAX7219 8x8 matrices: device 0 and 1 are the eyes, devices
   2..4 form a 24-column mouth.

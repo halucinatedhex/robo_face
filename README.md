@@ -138,12 +138,6 @@ A few things that cost time and might save you some:
 - **A PIR next to an audio amp will trigger itself.** The sensor is ignored
   while a clip plays and for a few seconds after.
 
-## Credits
-
-Ported from **CurtiBotEyes**, an ATmega sketch whose mouth artwork is carried
-over verbatim. Built with [PlatformIO](https://platformio.org/) and the
-Arduino ESP32 core.
-
 ## Licence
 
 MIT — see [LICENSE](LICENSE).

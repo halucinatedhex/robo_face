@@ -50,35 +50,48 @@ def dot(x, y, color=WIRE, r=3.5):
 
 # ---------------------------------------------------------------- chain ----
 def diagram_chain():
-    b = [label(20, 24, "LED matrix chain — only DATA chains; CLK, CS and power are a shared bus",
+    """
+    A true daisy chain.
+
+    These modules carry every signal on both their input and output headers,
+    so each one is wired only to its neighbours -- there is no star wiring
+    and no shared bus to run separately. Electrically CLK, CS and power end
+    up common to all modules; physically they pass straight through.
+    """
+    b = [label(20, 24, "LED matrix chain — every signal passes through each module",
                13, INK, weight="600")]
-    b.append(box(20, 50, 96, 74, "ESP32-C3", "AirM2M CORE", "#fff7ef", HOT))
+    b.append(box(20, 56, 96, 80, "ESP32-C3", "AirM2M CORE", "#fff7ef", HOT))
     mods = [("Mod 0", "left eye"), ("Mod 1", "right eye"),
             ("Mod 2", "mouth L"), ("Mod 3", "mouth R")]
-    xs = [160, 290, 420, 550]
+    xs = [186, 336, 486, 636]
     for (nm, sub), x in zip(mods, xs):
-        b.append(box(x, 50, 104, 74, nm, sub))
+        b.append(box(x, 56, 104, 80, nm, sub))
+        b.append(label(x + 4, 70, "IN", 8, DIM))
+        b.append(label(x + 100, 70, "OUT", 8, DIM, "end"))
 
-    # data path
-    b.append(wire([(116, 68), (160, 68)], HOT, 2.5))
-    b.append(label(138, 58, "DIN", 9.5, HOT, "middle", "600"))
-    for x in xs[:-1]:
-        b.append(wire([(x + 104, 68), (x + 130, 68)], HOT, 2.5))
-        b.append(label(x + 117, 58, "DOUT→DIN", 8.5, HOT, "middle"))
+    sigs = [("5 V", RED), ("GND", BLK), ("DIN", HOT), ("CS", GRN), ("CLK", BLU)]
+    gaps = [(116, 186), (290, 336), (440, 486), (590, 636)]
+    for gi, (x0, x1) in enumerate(gaps):
+        for si, (nm, col) in enumerate(sigs):
+            y = 68 + si * 14
+            b.append(wire([(x0, y), (x1, y)], col, 2))
+        if gi == 0:
+            for si, (nm, col) in enumerate(sigs):
+                b.append(label(118, 64 + si * 14, nm, 8, col, "start", "600"))
 
-    # shared bus
-    rows = [(150, "CLK  gpio 2", BLU), (170, "CS   gpio 7", GRN),
-            (190, "5 V", RED), (208, "GND", BLK)]
-    for y, txt, col in rows:
-        b.append(wire([(68, 124), (68, y), (654, y)], col, 2))
-        for x in xs:
-            b.append(wire([(x + 52, 124), (x + 52, y)], col, 1.2))
-            b.append(dot(x + 52, y, col, 3))
-        b.append(label(660, y + 4, txt, 10.5, col, "start", "600"))
-    b.append(label(20, 238, "Device 0 is the module whose DIN comes from the board. "
-                            "Order must be: left eye, right eye, mouth left, mouth right.",
+    b.append(label(20, 166,
+                   "One 5-way cable per hop: 5 V, GND, data, CS, CLK. The output header of each "
+                   "module feeds the input of the next,", 10.5, DIM))
+    b.append(label(20, 182,
+                   "so CLK, CS and power become common to the whole chain without any separate "
+                   "bus wiring. Only the data line is", 10.5, DIM))
+    b.append(label(20, 198,
+                   "consumed and regenerated: a module's DOUT carries what it did not keep.",
                    10.5, DIM))
-    return svg(820, 256, "".join(b), "LED matrix chain wiring")
+    b.append(label(20, 222,
+                   "Device 0 is the module the board plugs into. Order must be: left eye, "
+                   "right eye, mouth left, mouth right.", 10.5, INK, weight="600"))
+    return svg(780, 240, "".join(b), "LED matrix chain wiring")
 
 
 # ---------------------------------------------------------------- audio ----
